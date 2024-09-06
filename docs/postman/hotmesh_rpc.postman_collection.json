@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "41252fde-c4d9-4ae8-8bd9-62cf6ac98d82",
+		"name": "HotMesh RPC",
+		"description": "Surfaces the HotMesh module SDK as a set of RPC-oriented APIs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "11451556"
+	},
+	"item": [
+		{
+			"name": "/v1/findWhere TASK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        \"task\",\n        {\n          \"return\": [\"id\", \"timestamp\", \"taskId\", \"plan\"],\n          \"query\": [\n            { \"field\": \"taskId\", \"is\": \"=\", \"value\": \"task\\\\-jen\\\\.doe\" },\n            { \"field\": \"plan\", \"is\": \"=\", \"value\": \"pro\" }\n            ],\n          \"limit\": { \"start\": 0, \"size\": 100 },\n          \"options\": { \"namespace\": \"fuzzy\" }\n        }\n    ],\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/findWhere"
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/findWhere TASK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        \"task\",\n        {\n          \"return\": [\"id\", \"first\", \"email\"],\n          \"query\": [\n            { \"field\": \"email\", \"is\": \"=\", \"value\": \"jen\\\\.doe\\\\@hotmesh\\\\.com\" }\n            ],\n          \"limit\": { \"start\": 0, \"size\": 100 },\n          \"options\": { \"namespace\": \"fuzzy\" }\n        }\n    ],\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/findWhere"
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/export TASK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        \"task\",\n        \"jen.doe\",\n        {},\n        \"fuzzy\"\n    ],\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/export"
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/info TASK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\"task\", \"jen.doe\", { \"namespace\": \"fuzzy\" }],\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/info"
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/rollCall ALL",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/rollCall"
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/throttle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": [\n        {\n          \"throttle\": 60000,\n          \"topic\": \"v1-task\",\n          \"namespace\": \"fuzzy\"\n        }\n    ],\n    \"metadata\": {\n        \"database\": \"redis\",\n        \"namespace\": \"fuzzy\",\n        \"entity\": \"task\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3010/api/v1/hotmesh/throttle"
+			},
+			"response": []
+		}
+	]
+}

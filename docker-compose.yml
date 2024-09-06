@@ -1,0 +1,51 @@
+services:
+  fuzzy-service:
+    platform: linux/amd64
+    build:
+      context: .
+      target: development
+    command: npm run server
+    develop:
+      watch:
+      - action: sync
+        path: .
+        target: /home/node/app
+        ignore:
+          - node_modules/
+      - action: rebuild
+        path: package.json
+    ports:
+      - "3010:3010"
+    environment:
+      - NODE_ENV=development
+      - PORT=3010
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:3010/health || exit 1
+      interval: 5s
+      timeout: 4s
+      retries: 50
+
+  redis:
+    image: redis/redis-stack:7.2.0-v10
+    platform: linux/amd64
+    environment:
+      REDIS_ARGS: "--requirepass key_admin"
+    ports:
+      - "6399:6379"
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "localhost", "-p", "6379", "-a", "key_admin", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+    driver: local

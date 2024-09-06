@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "5d210398-3702-4df7-bcdd-8b81c2f15292",
+		"name": "FUZZY Task Entity API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "11451556"
+	},
+	"item": [
+		{
+			"name": "/v1/trips [generate] TRIP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"context\": \"Specify precise details and options, reflecting the high standards of a white-glove global travel planner. Detail the itinerary, ensuring a relaxing and bespoke experience. Assume all arrangements can be made without budget constraints. Never explain basic travel processes; assume the client is versed in luxury travel. Specify the exact recommended location based upon your knowledge.\",\n    \"instructions\": \"Plan a 3 day 2 night weekend to Seattle in late September, flying from SFO. Include interesting lunch and dinner options and at least one bespoke sight-seeing option. Recommend accomodations with views and prioritize proximal activities that limit exposure to traffic and driving.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [generate] RECIPE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"context\": \"All units are American. Specify exact quantities and recommend specific varietals that reflect a NorCal/Napa style palette (fresh); recommend Kosher salt, for example, never salt. BE concise! Never overexplain! Explain how to prep and cook, but never more! Recipe book style! Limit to 4 levels of task breakdown. Assume they are already present and gathered.\",\n    \"instructions\": \"Make traditional chicken adobo with silver swan bay leaves and dried oregano\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [generate] GHPages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"context\": \"The project is focused on creating a GitHub Pages site using React, targeted at personas including CIO, VP of Engineering, Engineering Manager, Principal Architect, DevOps Engineer, and Cloud Ops Engineer. The value proposition (content for the site) centers on reducing the need for experienced engineering talent. The customer has already purchased the domain from AWS (Route 53) and requires it to be mapped to the GitHub Pages site. Break down the project into major tasks like development, setup, deployment, and connecting, with a focus on simplicity and clarity. Assume that all necessary tools and accounts are already available.\",\n    \"instructions\": \"Develop a static site using React, structured around key personas in the tech industry. Set up the GitHub repository for GitHub Pages, ensuring it's ready for web hosting. Deploy the site, ensuring all React components and static assets are properly configured for GitHub Pages. Connect the custom domain purchased from AWS Route 53 to the GitHub Pages site, including DNS configuration and verification of domain ownership.\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [prune]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/HbfaqHInhMYRLOOtfciGdlb/prune?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"HbfaqHInhMYRLOOtfciGdlb",
+						"prune"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [clarify]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/HbfaqHInhMYRLOOtfciGdlb/clarify?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"HbfaqHInhMYRLOOtfciGdlb",
+						"clarify"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [expand]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/HbfaqHInhMYRLOOtfciGdlb/expand?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"HbfaqHInhMYRLOOtfciGdlb",
+						"expand"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [export]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/task-HQvVTztRpNt2AWTpKe2xbXy/export?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"task-HQvVTztRpNt2AWTpKe2xbXy",
+						"export"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/v1/trips [restore]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/HbfaqHInhMYRLOOtfciGdlb/restore?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"HbfaqHInhMYRLOOtfciGdlb",
+						"restore"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
