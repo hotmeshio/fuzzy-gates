@@ -8,7 +8,7 @@ const { doListExpansions } = MeshData.proxyActivities<typeof listExpansions>({
 
 
 /**
- * estalishes the gestalt of the task tree and expands any terminal
+ * establishes the gestalt of the task tree and expands any terminal
  * leaves that lack sufficient transitive granularity
  */
 export const expandTaskTree = async(target: string, config: { database: string, namespace: string}): Promise<number> => {

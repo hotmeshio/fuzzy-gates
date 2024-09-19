@@ -3,14 +3,26 @@ Fuzzy Gates employs a prompt style known as **Automated Transitive Task Trees (A
 
 The initiating prompt includes an **initial query context**—a robust guiding statement, describing the motivation, audience, constraints, etc, and transitive **seed instructions** (e.g., *Make a double cheeseburger*). The AI then generates a detailed task tree, breaking down the seed instructions into a series of transitive subtasks during recursive evaluation.
 
+## Quickstart
+The dashboard Web client will initialize on port 3010 once the cloned repo is deployed and running in Docker. You must include a `.env` file. The *OpenTelemetry* API key is optional, but the *OpenAI* API Key must be provided.
+
+### Requirements
+- Docker (Desktop 4.24/Docker Compose 2.22.0)
+- Node
+
+### Get started
+- `npm run docker:up` - Build
+- `npm run open:redis` - Open RedisInsight [password is `key_admin`]
+- `npm run docker:reset-redis` - Reset Redis [reset database]
+
 ## Principles
 
-**AT3** is based on the premise that transitive verbs can elicit process intelligence from an LLM. The implementation strategy is derived from literary analysis, where *'be' verbs* are linked with terminal narrative states, whereas *transitive verbs* propel the story forward.
+**AT3** is based on the premise that transitive verbs can elicit process intelligence. While *'be' verbs* are linked with terminal narrative states, *transitive verbs* propel the story forward.
 
->*BE Verbs* describe terminal states of being or becoming and include verbs such as be, am, is, are, was, were, been, have, has, had, do, does, did, can, could, may, might, shall, should, will, would, must.
+>*BE Verbs* describe terminal states of being or becoming and include verbs like: *be, am, is, are, was, were, been, have, has, had, do, does, did, can, could, may, might, shall, should, will, would, must*.
 
 ## Strategy
-Using an evolving context window and a set of recursive, gestalt-oriented strategies, AT3 is a multi-phase process that is entirely automated and iterative. It is designed to be influenced by the user's feedback at any step in the tree; but, it is also designed to be self-correcting and self-improving, leveraging analytics to prune, clarify, and expand the task tree.
+AT3 is a multi-phase process that uses an evolving context window and a set of gestalt-oriented strategies so the LLM can automatically refine the task tree; however, it also supports direct user influence at any juncture in the task tree, allowing users to influence the parse details, depth, and ultimate exection.
 
 - **I. GENERATE** the *Transitive Task Tree*. Recursively **clarify** or **subtask** the instructional seed using an evolving context:
   - **INITIAL CONTEXT**
@@ -21,6 +33,7 @@ Using an evolving context window and a set of recursive, gestalt-oriented strate
   1. **PRUNE TASKS**
   2. **CLARIFY TASKS**
   3. **EXPAND (SUBTASK) TASKS**
+- **III. Execute** the *Transitive Task Tree*. Choose a target model appropriate to generate the output (like choosing a model trained on code to author modules.)
 
 ## Example 1: Recipe for Classic Chicken Pot Pie
 
@@ -29,10 +42,13 @@ Using an evolving context window and a set of recursive, gestalt-oriented strate
 - `instructions` Make classic chicken pot pie with peas carrots and corn with extra flaky crust.
 
 ### One Shot Prompt OUTPUT
-*One Shot* generates the following output using OpenAI's ChatGPT-4o model, providing a single, comprehensive response that includes all necessary steps along with ingredients to complete the task. [output](./docs/examples/readme_recipe_oneshot.md)
+*One Shot* generates the following output using OpenAI's GPT-4o model, providing a single, comprehensive response that includes all necessary steps along with ingredients to complete the task. [output](./docs/examples/readme_recipe_oneshot.md)
+
+### OpenAI-o1-preview OUTPUT
+*o1-preview* generates the following output using OpenAI's OpenAI-o1-preview model, providing a single, comprehensive response that includes all necessary steps along with ingredients to complete the task. [output](./docs/examples/readme_recipe_gpto1.md).
 
 ### AT3 Prompt OUTPUT
-*AT3* produced significantly more detailed outpu using the same ChatGPT-4o model, particularly at the task level with detailed inputs and outupts described for every step. [output](./docs/examples/readme_recipe_at3.md)
+*AT3* produced significantly more detailed outpu using the same GPT-4o model, particularly at the task level with detailed inputs and outupts described for every step. [output](./docs/examples/readme_recipe_at3.md)
 
 ## Example 2: GitHub Pages Site with React and AWS Route 53
 
@@ -41,7 +57,7 @@ Using an evolving context window and a set of recursive, gestalt-oriented strate
 - `instructions` Develop a static site using React, structured around key personas in the tech industry. Set up the GitHub repository for GitHub Pages, ensuring it's ready for web hosting. Deploy the site, ensuring all React components and static assets are properly configured for GitHub Pages. Connect the custom domain purchased from AWS Route 53 to the GitHub Pages site, including DNS configuration and verification of domain ownership. Return all instructions in Markdown as a single response users can follow step-by-step.
 
 ### One Shot Prompt OUTPUT
-*One Shot* generates the following output using OpenAI's ChatGPT-4o model, providing a single, comprehensive response that includes all necessary steps to complete the task. [output](./docs/examples/readme_ghpages_oneshot.md)
+*One Shot* generates the following output using OpenAI's GPT-4o model, providing a single, comprehensive response that includes all necessary steps to complete the task. [output](./docs/examples/readme_ghpages_oneshot.md)
 
 ### AT3 Prompt OUTPUT
 *AT3's* iterative back-and-forth produces significantly more detailed output, resulting in a richer and more nuanced task breakdown. [output](./docs/examples/readme_ghpages_at3.md)

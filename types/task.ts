@@ -58,6 +58,15 @@ export type ClarifyResponse = {
   clarify: Clarification[];
 };
 
+type Execution = {
+  id: string;
+  result: string;
+};
+
+export type ExecutionResponse = {
+  output: Execution[];
+};
+
 type Expansion = {
   id: string;
   depth: string;
@@ -80,6 +89,7 @@ export type RawTask = {
   _inputs?: string;
   _outputs?: string;
   _context?: string;
+  _result?: string;
 }
 
 export type TaskConfg = {
@@ -97,6 +107,7 @@ export type TaskExport = {
   _instructions?: string;
   _inputs?: string;
   _outputs?: string;
+  _result?: string;
 };
 
 export type ExportFormat = 'markdown' | 'html';

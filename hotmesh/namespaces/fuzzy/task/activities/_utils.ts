@@ -68,12 +68,13 @@ export const findExportableTasks = async (originId: string, config: {database: s
     '0',
     '100',
     'RETURN',
-    '5',
+    '6',
     '_depth',
     '_task',
     '_instructions',
     '_inputs',
     '_outputs',
+    '_result',
   ) as [number, ...Array<string | string[]>];
   return arrayToHash(results) as RawTask[];
 }
@@ -110,6 +111,10 @@ export const findOrigin = async (originId: string, config: {database: string, na
   return items[0];
 }
 
+/**
+ * The LLM can get confused about what constitutes an ID, so this refines the LLM response,
+ * so downstream methods can expect a valid record ID. 
+ */
 export const resolveId = (id: string, dbTasks: RawTask[], removeType = false) => {
   if (!id) return '';
   if (id.includes(':')) {
@@ -171,6 +176,9 @@ const renderTaskAsMarkdown = (task: TaskExport): string => {
   if (task._instructions) {
     markdown += `${transformInstructionsToMarkdown(task._instructions)}\n`;
   }
+  if (task._result?.length) {
+    markdown += `${transformResultToMarkdown(task._result)}\n`;
+  }
   if (task._inputs?.length) {
     markdown += `${formatIngredientsAsMarkdown(task._inputs, 'Inputs')}\n`;
   }
@@ -200,6 +208,18 @@ const transformInstructionsToMarkdown = (instructions: string): string => {
   });
 
   return markdown;
+}
+
+const transformResultToMarkdown = (result: string): string => {
+  // Use replace to insert a unique marker after the targeted commas, then split by that marker.
+  const regex = /,(?=\S)/g;
+  const marker = '__,__'; // Unique marker to split on after replacement
+  const modifiedResult = result.replace(regex, ',' + marker);
+  const items = modifiedResult.split(marker);
+  
+  // Join the items with markdown list formatting
+  const parsedOutput: string = items.length > 1 ? `- ${items.join('\n- ')}\n` : result;
+  return `**Result**\n\n${parsedOutput}\n`;
 }
 
 const formatIngredientsAsMarkdown = (json: string, title: string): string => {

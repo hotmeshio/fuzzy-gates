@@ -69,6 +69,17 @@ router.post('/:id/clarify', async (req, res) => {
   }
 });
 
+// Execute leaf task instructions
+router.post('/:id/execute', async (req, res) => {
+  try {
+    const query = req.query as {database: string, namespace: string};
+    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    res.json(await task.execute(req.params.id, { database: query.database, namespace: query.namespace }));
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 // Expand leaf tasks into branches with subtask leaves
 router.post('/:id/expand', async (req, res) => {
   try {

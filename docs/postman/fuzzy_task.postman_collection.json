@@ -241,6 +241,54 @@
 			"response": []
 		},
 		{
+			"name": "/v1/trips [execute]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/tasks/HbfaqHInhMYRLOOtfciGdlb/clarify?database=redis&namespace=fuzzy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"HbfaqHInhMYRLOOtfciGdlb",
+						"clarify"
+					],
+					"query": [
+						{
+							"key": "database",
+							"value": "redis"
+						},
+						{
+							"key": "namespace",
+							"value": "fuzzy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/v1/trips [expand]",
 			"request": {
 				"method": "POST",

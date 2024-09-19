@@ -23,30 +23,25 @@ export const generateTaskTree = async(input: TaskInput): Promise<number> => {
     'outputs', '',
     'instructions', '',
     'tasks', '',
+    'result', '',
   );
 
-  //ask the LLM for how to proceed (save instructions or create subtasks)
+  //ask the LLM for how to proceed (save task instructions or create subtasks)
   const response = await doGenerateTaskTree({
     ...input,
     ancestors: input.ancestors ?? [] 
   });
 
-  const results = await MeshData.workflow.search();
-  if ('tasks' in response) {
+  if ('instructions' in response) {
     const results = await MeshData.workflow.search();
-    await results.set(
-      'instructions', '',
-      'inputs', '',
-      'outputs', '',
-    );
-    return await createSubtasks(id, input, response);
-  } else if ('instructions' in response) {
     await results.set(
       'instructions', response.instructions,
       'inputs', response.inputs ? JSON.stringify(response.inputs) : '',
       'outputs', response.outputs ? JSON.stringify(response.outputs) : '',
     );
-  }
+  } else if ('tasks' in response) {
+    return await createSubtasks(id, input, response);
+  } 
 
   return Date.now();
 };
@@ -60,6 +55,14 @@ export const generateTaskTree = async(input: TaskInput): Promise<number> => {
  */
 export const createSubtasks = async(id: string, input: TaskInput, response: TasksResponse): Promise<number> => {
   console.log('CREATE SUBTASKS >', id, response);
+  const results = await MeshData.workflow.search();
+  await results.set(
+    'instructions', '',
+    'inputs', '',
+    'outputs', '',
+    'result', '',
+  );
+
   const items = [];
   let ancestors: string[] = input.ancestors ?? [];
   ancestors.push(input.current);

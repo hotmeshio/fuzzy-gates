@@ -31,6 +31,12 @@ export const schema: Types.WorkflowSearchSchema = {
     required: true,
     examples: ['Make a cake.'],
   },
+  result: {
+    type: 'TEXT',
+    primitive: 'string',
+    required: true,
+    examples: ['5 plus 5 is 10'],
+  },
   parent: {
     type: 'TAG',
     primitive: 'string',
