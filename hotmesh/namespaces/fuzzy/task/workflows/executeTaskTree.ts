@@ -11,9 +11,10 @@ const { doExecuteTasks } = MeshData.proxyActivities<typeof executeTasks>({
   activities: executeTasks
 });
 
-export const executeTaskTree = async(config: { database: string, namespace: string}): Promise<number> => {
+export const executeTaskTree = async(target: string | null, config: {database: string, namespace: string, model: string}): Promise<number> => {
   const llmTasks = await doListExecutions(
     MeshData.workflow.getContext().workflowId,
+    target,
     config,
   ) as ExecutionResponse;
 

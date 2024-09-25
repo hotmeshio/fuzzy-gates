@@ -31,7 +31,7 @@
   "dependencies": {
     "@honeycombio/opentelemetry-node": "^0.7.2",
     "@hotmeshio/hotmesh": "^0.3.5",
-    "@hotmeshio/dashboard": "^0.3.5",
+    "@hotmeshio/dashboard": "^0.3.6",
     "@opentelemetry/auto-instrumentations-node": "^0.47.1",
     "@opentelemetry/sdk-node": "^0.52.1",
     "cors": "^2.8.5",
@@ -42,6 +42,7 @@
     "morgan": "^1.10.0",
     "openai": "^4.29.2",
     "redis": "^4.6.10",
+    "socket.io": "^4.8.0",
     "winston": "^3.13.0"
   },
   "devDependencies": {

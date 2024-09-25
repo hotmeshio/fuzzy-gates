@@ -11,19 +11,21 @@ const { doListExpansions } = MeshData.proxyActivities<typeof listExpansions>({
  * establishes the gestalt of the task tree and expands any terminal
  * leaves that lack sufficient transitive granularity
  */
-export const expandTaskTree = async(target: string, config: { database: string, namespace: string}): Promise<number> => {
+export const expandTaskTree = async(target: string | null, config: { database: string, namespace: string}): Promise<number> => {
   // query the LLM for tasks that require expansion
   const [tasksToExpand, globalTask, globalContext] = await doListExpansions(
     MeshData.workflow.getContext().workflowId,
+    target,
     config,
   ) as [ExpansionResponse, string, string];
+
+  console.log('EXPANSION REQUEST >', tasksToExpand);
 
   // expand each task into subtasks
   const origin = MeshData.workflow.getContext().workflowId;
   for (const task of tasksToExpand?.expand) {
     const input: TaskInput = {
       current: task.task,
-      parent: '',
       preceding: '',
       following: '',
       origin: origin.split('-')[1],

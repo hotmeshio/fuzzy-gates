@@ -43,10 +43,10 @@ class GPTService {
     return cleaned;
   }
 
-  async evaluateGestalt(messages: ChatMessage[]): Promise<GestaltResponse | PruneResponse | ClarifyResponse | ExpansionResponse | APIErrorResponse> {
+  async evaluateGestalt(messages: ChatMessage[], config?: { model?: string }): Promise<GestaltResponse | PruneResponse | ClarifyResponse | ExpansionResponse | APIErrorResponse> {
     const now = Date.now();
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: config?.model ?? 'gpt-4o',
       messages: this.prepareMessages(messages),
       temperature: 0.1,
       max_tokens: 4096,

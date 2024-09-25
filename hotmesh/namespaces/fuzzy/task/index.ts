@@ -86,12 +86,12 @@ class Task extends BaseEntity {
     return await restoreClient(id, this.meshData, this._clientOpts(config));
   }
 
-  async clarify(id: string, config: {database: string, namespace: string}): Promise<{ hookId: string }> {
-    return await clarifyClient(id, this.meshData, this._clientOpts(config));
+  async clarify(id: string, target: string, config: {database: string, namespace: string}): Promise<{ hookId: string }> {
+    return await clarifyClient(id, target, this.meshData, this._clientOpts(config));
   }
 
-  async execute(id: string, config: {database: string, namespace: string}): Promise<{ hookId: string }> {
-    return await executeClient(id, this.meshData, this._clientOpts(config));
+  async execute(id: string, target: string, config: {database: string, namespace: string, model?: string}): Promise<{ hookId: string }> {
+    return await executeClient(id, target, this.meshData, this._clientOpts(config));
   }
 
   async expand(id: string, target: string, config: {database: string, namespace: string}): Promise<{ hookId: string }> {
@@ -106,12 +106,13 @@ class Task extends BaseEntity {
    * client options when invoking workers/workflows or spawning hooks
    * @private
    */
-  _clientOpts(config?: { namespace: string, database: string }) {
+  _clientOpts(config?: { namespace: string, database: string, model?: string }): { entity: string, taskQueue: string, namespace: string, database?: string, model?: string } {
     return {
       entity: this.getEntity(),
       taskQueue: this.getTaskQueue(),
       namespace: config?.namespace ?? this.getNamespace(),
       database: config?.database ?? undefined,
+      model: config?.model ?? undefined,
     };
   }
 }

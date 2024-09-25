@@ -11,9 +11,10 @@ const { doClarifyTasks } = MeshData.proxyActivities<typeof clarifyTasks>({
   activities: clarifyTasks
 });
 
-export const clarifyTaskTree = async(config: { database: string, namespace: string}): Promise<number> => {
+export const clarifyTaskTree = async(targetId: string | null, config: { database: string, namespace: string}): Promise<number> => {
   const llmTasks = await doListClarifications(
     MeshData.workflow.getContext().workflowId,
+    targetId,
     config,
   ) as ClarifyResponse;
 

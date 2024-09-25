@@ -1,5 +1,5 @@
 # Create GitHub Pages Site using GPT-4o One-Shot
-[Compare to GPT-4o AT3](./readme_ghpages_at3.md) | [Compare to OpenAI-o1-preview](./readme_ghpages_openaio1.md)
+[Compare to GPT-4o T3](./readme_ghpages_at3.md) | [Compare to OpenAI-o1-preview](./readme_ghpages_openaio1.md)
 
 
 ## INPUT/PROMPT

@@ -1,3 +1,4 @@
+import { StringStringType } from "@hotmeshio/hotmesh/build/types";
 import { arrayToHash, repeatString } from "../../../../../modules/utils";
 import { ExportFormat, PruneTarget, RawTask, TaskExport } from "../../../../../types/task";
 import { findEntity } from "../../../../manifest";
@@ -12,8 +13,9 @@ const flattenText = (text: string) => {
   return text.replace(/\n/g, '');
 }
 
-export const mapLeafTasks = (tasks: RawTask[]) => {
+export const mapLeafTasks = (tasks: RawTask[], targetId?: string) => {
   return tasks.filter(step => step._instructions)
+    .filter(step => !targetId || step.$.endsWith(targetId))
     .map(step => {
       //pipes elicit a sense of 'treeness' better than other delimiters
       const preText = repeatString('|', step._depth?.split('.').length - 1);
@@ -21,6 +23,62 @@ export const mapLeafTasks = (tasks: RawTask[]) => {
     })
     .join(' ');
 }
+
+/**
+ * Finds the target task by ID, assembles the ancestor task list, and identifies prior and following sibling tasks.
+ * @param tasks Array of RawTask objects sorted by depth.
+ * @param targetId The ID of the target task to find.
+ * @returns An object containing the ancestor task list, prior sibling, and following sibling tasks.
+ */
+export const findTaskDetails = (tasks: RawTask[], targetId: string): {ancestorTasks: string[], targetTask: StringStringType, priorSibling: string, followingSibling: string} => {
+  // Find the target task by its ID
+  const targetTask = tasks.find(task => task.$.endsWith(targetId));
+  if (!targetTask) {
+    throw new Error('Target task not found');
+  }
+
+  const targetDepth = targetTask._depth.split('.');
+  const targetDepthLength = targetDepth.length;
+
+  // Assemble the ancestor task list
+  const ancestorTasks: string[] = [];
+  let priorSibling: string | null = null;
+  let followingSibling: string | null = null;
+
+  // Iterate over tasks to build the ancestor list and find siblings
+  for (let i = 0; i < tasks.length; i++) {
+    const currentTask = tasks[i];
+    const currentDepth = currentTask._depth.split('.');
+
+    // Check if the current task is an ancestor
+    if (currentDepth.length < targetDepthLength && targetDepth.slice(0, currentDepth.length).join('.') === currentDepth.join('.')) {
+      ancestorTasks.push(currentTask._task);
+    }
+
+    // Check if the current task is a sibling of the target task
+    if (
+      currentDepth.length === targetDepthLength &&
+      currentDepth.slice(0, -1).join('.') === targetDepth.slice(0, -1).join('.')
+    ) {
+      const currentDepthLast = parseInt(currentDepth[currentDepth.length - 1], 10);
+      const targetDepthLast = parseInt(targetDepth[targetDepth.length - 1], 10);
+
+      // Identify the prior and following siblings
+      if (currentDepthLast === targetDepthLast - 1) {
+        priorSibling = currentTask._task;
+      } else if (currentDepthLast === targetDepthLast + 1 && !followingSibling) {
+        followingSibling = currentTask._task;
+      }
+    }
+  }
+
+  return {
+    ancestorTasks,
+    targetTask,
+    priorSibling,
+    followingSibling
+  };
+};
 
 /**
  * Finds active/inactive/all tasks for a given task tree origin guid, given
@@ -41,10 +99,11 @@ export const findTasks = async (originId: string, config: {database: string, nam
     '0',
     '100',
     'RETURN',
-    '3',
+    '4',
     '_depth',
     '_task',
     '_instructions',
+    '_context',
   ) as [number, ...Array<string | string[]>];
   return arrayToHash(results) as RawTask[];
 }
@@ -83,7 +142,6 @@ export const findExportableTasks = async (originId: string, config: {database: s
  * Returns the origin task with additional context.
  */
 export const findOrigin = async (originId: string, config: {database: string, namespace: string}): Promise<RawTask> => {
-  console.log('findOrigin', originId, config, `@_origin:{${originId.substring(5).replace(/([-\.])/g, '\\$1')}} @_depth:{1}`);
   const task = findEntity(config.database, config.namespace, 'task');
   const results = await task.meshData.find(
     'task',
@@ -107,7 +165,6 @@ export const findOrigin = async (originId: string, config: {database: string, na
     '_parent',
   ) as [number, ...Array<string | string[]>];
   const items = arrayToHash(results) as RawTask[];
-  console.log(items);
   return items[0];
 }
 

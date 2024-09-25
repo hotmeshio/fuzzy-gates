@@ -18,7 +18,6 @@ export const pruneTaskTree = async(config: { database: string, namespace: string
   ) as PruneResponse;
 
   await doPruneTasks(prunableTasks.prune, config);
-  console.log('PRUNED >', prunableTasks);
 
   return Date.now();
 }

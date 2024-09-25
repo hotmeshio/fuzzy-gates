@@ -1,5 +1,5 @@
 # Fuzzy Gates
-Fuzzy Gates employs a prompt style known as **Automated Transitive Task Trees (AT3)**.
+Fuzzy Gates employs a prompt style known as **Automated Transitive Task Trees (T3)**.
 
 The initiating prompt includes an **initial query context**—a robust guiding statement, describing the motivation, audience, constraints, etc, and transitive **seed instructions** (e.g., *Make a double cheeseburger*). The AI then generates a detailed task tree, breaking down the seed instructions into a series of transitive subtasks during recursive evaluation.
 
@@ -15,14 +15,16 @@ The dashboard Web client will initialize on port 3010 once the cloned repo is de
 - `npm run open:redis` - Open RedisInsight [password is `key_admin`]
 - `npm run docker:reset-redis` - Reset Redis [reset database]
 
+Once the container builds and is actively running, navigate to the Web App at http://localhost:3010/tasks. RedisInsight is included for browsing the raw data.
+
 ## Principles
 
-**AT3** is based on the premise that transitive verbs can elicit process intelligence. While *'be' verbs* are linked with terminal narrative states, *transitive verbs* propel the story forward.
+**T3** is based on the premise that transitive verbs can elicit process intelligence from an LLM. While *'be' verbs* are linked with terminal narrative states, *transitive verbs* propel the story forward.
 
 >*BE Verbs* describe terminal states of being or becoming and include verbs like: *be, am, is, are, was, were, been, have, has, had, do, does, did, can, could, may, might, shall, should, will, would, must*.
 
 ## Strategy
-AT3 is a multi-phase process that uses an evolving context window and a set of gestalt-oriented strategies so the LLM can automatically refine the task tree; however, it also supports direct user influence at any juncture in the task tree, allowing users to influence the parse details, depth, and ultimate exection.
+T3 is a multi-phase process that uses an evolving context window and a set of gestalt-oriented strategies so the LLM can automatically refine the task tree; however, it also supports direct user influence at any juncture in the task tree, allowing users to influence the parse details, depth, and ultimate exection.
 
 - **I. GENERATE** the *Transitive Task Tree*. Recursively **clarify** or **subtask** the instructional seed using an evolving context:
   - **INITIAL CONTEXT**
@@ -47,8 +49,8 @@ AT3 is a multi-phase process that uses an evolving context window and a set of g
 ### OpenAI-o1-preview OUTPUT
 *o1-preview* generates the following output using OpenAI's OpenAI-o1-preview model, providing a single, comprehensive response that includes all necessary steps along with ingredients to complete the task. [output](./docs/examples/readme_recipe_gpto1.md).
 
-### AT3 Prompt OUTPUT
-*AT3* produced significantly more detailed outpu using the same GPT-4o model, particularly at the task level with detailed inputs and outupts described for every step. [output](./docs/examples/readme_recipe_at3.md)
+### T3 Prompt OUTPUT
+*T3* produced significantly more detailed outpu using the same GPT-4o model, particularly at the task level with detailed inputs and outupts described for every step. [output](./docs/examples/readme_recipe_at3.md)
 
 ## Example 2: GitHub Pages Site with React and AWS Route 53
 
@@ -59,12 +61,12 @@ AT3 is a multi-phase process that uses an evolving context window and a set of g
 ### One Shot Prompt OUTPUT
 *One Shot* generates the following output using OpenAI's GPT-4o model, providing a single, comprehensive response that includes all necessary steps to complete the task. [output](./docs/examples/readme_ghpages_oneshot.md)
 
-### AT3 Prompt OUTPUT
-*AT3's* iterative back-and-forth produces significantly more detailed output, resulting in a richer and more nuanced task breakdown. [output](./docs/examples/readme_ghpages_at3.md)
+### T3 Prompt OUTPUT
+*T3's* iterative back-and-forth produces significantly more detailed output, resulting in a richer and more nuanced task breakdown. [output](./docs/examples/readme_ghpages_at3.md)
 
 ## Conclusion
 
-While one-shot strategies can be compared to throwing a perfectly chiseled chunk of marble into a lake and observing the emerging ripples, AT3 is more akin to skipping a stone across the water, letting the water fragment the stone along its journey. This approach is interactive, dynamic, and iterative. The outcome, while not always perfect, is significantly more detailed and extensible.
+While one-shot strategies can be compared to throwing a perfectly chiseled chunk of marble into a lake and observing the emerging ripples, T3 is more akin to skipping a stone across the water, letting the water fragment the stone along its journey. This approach is interactive, dynamic, and iterative. The outcome, while not always perfect, is significantly more detailed and extensible.
 
 ## Run
 

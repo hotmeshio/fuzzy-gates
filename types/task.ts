@@ -6,7 +6,6 @@ export type TaskInput = {
   context: string;
   global: string;
   current: string;
-  parent?: string;   //parent task id (guid)
   depth: string; //'1.2.4.7' (unique path)
   preceding?: string; // preceding step
   following?: string; // following step
@@ -97,6 +96,7 @@ export type TaskConfg = {
   taskQueue: string,
   entity: string,
   database?: string,
+  model?: string, //ai model
 };
 
 export type TaskExport = {

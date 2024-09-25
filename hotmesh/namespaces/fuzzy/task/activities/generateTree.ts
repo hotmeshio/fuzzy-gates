@@ -1,3 +1,4 @@
+import { Socket } from "../../../../../http/utils/socket";
 import { GPT } from "../../../../../lib/gpt";
 import { APIErrorResponse } from "../../../../../types/gpt";
 import { TaskInput, TaskOutput } from "../../../../../types/task";
@@ -47,7 +48,15 @@ export const doGenerateTaskTree = async (taskInput: TaskInput): Promise<TaskOutp
     #RESPONSE FORMAT :: { "instructions": "...", "inputs": [{"item": "", "quantity": #, "unit": ""},], "outputs": [{"item": "", "quantity": #, "unit": ""},] }
   `;
 
-  console.log('GENERATION REQUEST >', terminal ? contentTerminal : content);
+  Socket.broadcast('mesh.planes.control', {
+    data: { activity: 'generateTaskTree', content: terminal ? contentTerminal : content },
+    metadata: {
+      timestamp: Date.now(),
+      statusCode: 200,
+      status: 'success'
+    }
+  });
+  
   return await GPT.generateTaskTree([
     {role: 'system', content: terminal ? contentTerminal : content },
     {role: 'system', content: emphasis },

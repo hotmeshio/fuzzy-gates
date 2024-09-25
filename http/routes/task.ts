@@ -3,6 +3,7 @@ import { findEntity } from '../../hotmesh/manifest';
 import { Task } from '../../hotmesh/namespaces/fuzzy/task';
 import { ExportFormat, TaskInput, TaskInstruction } from '../../types/task';
 import { HotMesh } from '@hotmeshio/hotmesh';
+import { Socket } from '../utils/socket';
 
 const router = Router();
 
@@ -12,6 +13,29 @@ router.get('/schema', async (req, res) => {
     const query = req.query as {database: string, namespace: string};
     const task = findEntity(query.database, query.namespace, 'task')as Task;
     res.json(task.getSearchOptions());
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+//standard CRUD operation (PATCH)
+router.patch('/:id', async (req, res) => {
+  try {
+    const query = req.query as {database: string, namespace: string};
+    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const payload = req.body as Record<string, any>;
+    const hookPayload = await task.update(req.params.id, payload);
+    console.log('HOOK PAYLOAD >', hookPayload);
+    res.json(hookPayload);
+
+    Socket.broadcast('mesh.planes.control', {
+      data: { method: 'patch', id: req.params.id },
+      metadata: {
+        timestamp: Date.now(),
+        statusCode: 200,
+        status: 'success'
+      }
+    });
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -63,7 +87,9 @@ router.post('/:id/clarify', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
     const task = findEntity(query.database, query.namespace, 'task')as Task;
-    res.json(await task.clarify(req.params.id, { database: query.database, namespace: query.namespace }));
+    const payload = req.body as { target?: string };
+    const hookPayload = await task.clarify(req.params.id, payload.target, { database: query.database, namespace: query.namespace });
+    res.json(hookPayload);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -74,7 +100,8 @@ router.post('/:id/execute', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
     const task = findEntity(query.database, query.namespace, 'task')as Task;
-    res.json(await task.execute(req.params.id, { database: query.database, namespace: query.namespace }));
+    const payload = req.body as { target?: string, model?: string };
+    res.json(await task.execute(req.params.id, payload.target, { database: query.database, namespace: query.namespace, model: payload.model }));
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

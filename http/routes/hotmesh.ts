@@ -13,6 +13,10 @@ const router = Router();
 const getDashboardManifest = async (_: Request, res: Response) => {
   try {
     res.status(200).send({
+      labels: {
+        title: 'TaskGPT'
+      },
+      addons: ['tasks'],
       manifest: toJSON(),
       honeycomb_service_name: process.env.HONEYCOMB_SERVICE_NAME,
       honeycomb_environment: process.env.HONEYCOMB_ENVIRONMENT,

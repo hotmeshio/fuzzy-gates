@@ -4,6 +4,7 @@ import { MeshData } from '@hotmeshio/hotmesh';
 import path from 'path';
 import express, { NextFunction, Request, Response } from 'express';
 import { createServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 
 import { setupTelemetry, shutdownTelemetry } from '../lib/tracer';
@@ -11,6 +12,7 @@ import { init as initHotMesh } from '../hotmesh/manifest';
 import { router as hotMeshRouter } from './routes/hotmesh';
 import { router as taskRouter } from './routes/task';
 import { configureLogger } from './utils/logger';
+import { Socket } from './utils/socket';
 
 const app = express();
 const logger = configureLogger(app);
@@ -38,6 +40,16 @@ async function initialize() {
   await initHotMesh();
   const httpServer = createServer(app);
   app.use(express.json());
+
+  const io = new SocketIOServer(httpServer, {
+    cors: {
+      origin: "http://localhost:3000", // Ensure this matches your front-end URL, adjust as needed
+      methods: ["GET", "POST"], // Allowed request methods
+      credentials: true
+    }
+  });
+  Socket.bindServer(io);
+
 
   // API routes
   app.use('/api/v1/tasks', taskRouter);       //REST style API

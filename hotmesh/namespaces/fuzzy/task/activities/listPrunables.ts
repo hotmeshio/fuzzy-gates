@@ -1,3 +1,4 @@
+import { Socket } from "../../../../../http/utils/socket";
 import { GPT } from "../../../../../lib/gpt";
 import { APIErrorResponse } from "../../../../../types/gpt";
 import { PruneResponse, RawTask } from "../../../../../types/task";
@@ -20,8 +21,15 @@ export const doListPrunables = async (originId: string, config: {database: strin
   `;
   const emphasis = 'RETURN stringified JSON. NEVER include additional content or wrap. RESPONSE begins with { AND ends with }';
 
+  Socket.broadcast('mesh.planes.control', {
+    data: { activity: 'listPrunables', id: originId, request: content },
+    metadata: {
+      timestamp: Date.now(),
+      statusCode: 200,
+      status: 'success'
+    }
+  });
 
-  console.log('PRUNABLES REQUEST >', content);
   const toPrune = await GPT.evaluateGestalt([
     {role: 'system', content },
     {role: 'system', content: emphasis },

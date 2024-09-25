@@ -2,6 +2,7 @@ import { MeshData } from '@hotmeshio/hotmesh';
 import * as activities from '../activities/generateTree';
 import { paddedNumber } from '../../../../../modules/utils';
 import { TaskInput, TasksResponse } from '../../../../../types/task';
+import { Socket } from '../../../../../http/utils/socket';
 
 const { doGenerateTaskTree } = MeshData.proxyActivities<typeof activities>({ activities });
 
@@ -15,7 +16,6 @@ export const generateTaskTree = async(input: TaskInput): Promise<number> => {
     '$entity', 'task',            //task, recipe, repository etc
     'id', id,
     'origin', input.origin,       //top-level task guid
-    'parent', input.parent ?? '', //parent task guid
     'task', input.current,
     'depth', input.depth,
     'active', 'y',
@@ -33,6 +33,15 @@ export const generateTaskTree = async(input: TaskInput): Promise<number> => {
   });
 
   if ('instructions' in response) {
+    Socket.broadcast('mesh.planes.control', {
+      data: { activity: 'generateTaskTree', id: id, instructions: response.instructions },
+      metadata: {
+        timestamp: Date.now(),
+        statusCode: 200,
+        status: 'success'
+      }
+    });
+    
     const results = await MeshData.workflow.search();
     await results.set(
       'instructions', response.instructions,
@@ -54,7 +63,15 @@ export const generateTaskTree = async(input: TaskInput): Promise<number> => {
  *       a `hook` by the expandTaskTree `workflow`
  */
 export const createSubtasks = async(id: string, input: TaskInput, response: TasksResponse): Promise<number> => {
-  console.log('CREATE SUBTASKS >', id, response);
+  Socket.broadcast('mesh.planes.control', {
+    data: { activity: 'createSubtasks', id: id, tasks: response.tasks },
+    metadata: {
+      timestamp: Date.now(),
+      statusCode: 200,
+      status: 'success'
+    }
+  });
+  
   const results = await MeshData.workflow.search();
   await results.set(
     'instructions', '',
@@ -72,7 +89,6 @@ export const createSubtasks = async(id: string, input: TaskInput, response: Task
     items.push(MeshData.workflow.execChild<number>({
       args: [{
         ...input,
-        parent: id,
         current: task,
         depth: `${input.depth}.${paddedNumber(i + 1)}`,
         preceding: i ? response.tasks[i - 1] : '-',

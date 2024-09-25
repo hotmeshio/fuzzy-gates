@@ -1,5 +1,5 @@
 # Create Chicken Pot Pie Recipe using GPT-4o One-Shot
-[Compare to GPT-4o AT3](./readme_recipe_at3.md) | [Compare to OpenAI-o1-preview](./readme_recipe_gpto1.md)
+[Compare to GPT-4o T3](./readme_recipe_at3.md) | [Compare to OpenAI-o1-preview](./readme_recipe_gpto1.md)
 
 ## INPUT/PROMPT
 The following prompt was sent to the `GPT-4o` model. The prompt includes an example of the expected output along with some contextual tips for the desired level of detail in the final output.
