@@ -1,5 +1,4 @@
 # Create React TypeScript App using GPT-4o T3
-[Compare to GPT-4o One-Shot](./readme_ghpages_oneshot.md) | [Compare to OpenAI-o1-preview](./readme_ghpages_openaio1.md)
 
 ### INPUT/PROMPT
 The following prompt was executed recursively using the `T3` prompt strategy (one sub-task at a time) and targeted the `GPT-4o` model.
