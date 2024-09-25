@@ -1,5 +1,5 @@
 # Fuzzy Gates
-Fuzzy Gates employs a prompt style known as **Automated Transitive Task Trees (T3)**.
+Fuzzy Gates employs a prompt style known as **Transitive Task Trees (T3)**.
 
 The initiating prompt includes an **initial query context**—a robust guiding statement, describing the motivation, audience, constraints, etc, and transitive **seed instructions** (e.g., *Make a double cheeseburger*). The AI then generates a detailed task tree, breaking down the seed instructions into a series of transitive subtasks during recursive evaluation.
 
