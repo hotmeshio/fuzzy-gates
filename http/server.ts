@@ -8,11 +8,11 @@ import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 
 import { setupTelemetry, shutdownTelemetry } from '../lib/tracer';
-import { init as initHotMesh } from '../hotmesh/manifest';
 import { router as hotMeshRouter } from './routes/hotmesh';
 import { router as taskRouter } from './routes/task';
 import { configureLogger } from './utils/logger';
 import { Socket } from './utils/socket';
+import { initializeHotMesh } from './utils/hotmesh';
 
 const app = express();
 const logger = configureLogger(app);
@@ -37,7 +37,7 @@ app.use(cors(corsOptions));
 async function initialize() {
   //start persistent services
   setupTelemetry();
-  await initHotMesh();
+  await initializeHotMesh();
   const httpServer = createServer(app);
   app.use(express.json());
 

@@ -1,9 +1,12 @@
+import { MeshOS } from '@hotmeshio/hotmesh';
+
 import { Router } from 'express';
-import { findEntity } from '../../hotmesh/manifest';
-import { Task } from '../../hotmesh/namespaces/fuzzy/task';
-import { ExportFormat, TaskInput, TaskInstruction } from '../../types/task';
+import { marked } from 'marked';
+import { Task } from '../../hotmesh/task';
+import { ExportFormat, TaskAPIConfig, TaskInput, TaskInstruction } from '../../types/task';
 import { HotMesh } from '@hotmeshio/hotmesh';
 import { Socket } from '../utils/socket';
+import { styles } from '../utils/styles';
 
 const router = Router();
 
@@ -11,7 +14,7 @@ const router = Router();
 router.get('/schema', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     res.json(task.getSearchOptions());
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -22,11 +25,9 @@ router.get('/schema', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     const payload = req.body as Record<string, any>;
-    const hookPayload = await task.update(req.params.id, payload);
-    console.log('HOOK PAYLOAD >', hookPayload);
-    res.json(hookPayload);
+    res.json(await task.update(req.params.id, payload));
 
     Socket.broadcast('mesh.planes.control', {
       data: { method: 'patch', id: req.params.id },
@@ -45,7 +46,7 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     let body = req.body as TaskInstruction;
     let payload: TaskInput = {
       origin: HotMesh.guid().replace(/-/g, ''),
@@ -64,7 +65,7 @@ router.post('/', async (req, res) => {
 router.post('/:id/prune', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     res.json(await task.prune(req.params.id, { database: query.database, namespace: query.namespace }));
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -75,7 +76,7 @@ router.post('/:id/prune', async (req, res) => {
 router.post('/:id/restore', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     res.json(await task.restore(req.params.id, { database: query.database, namespace: query.namespace }));
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -86,9 +87,9 @@ router.post('/:id/restore', async (req, res) => {
 router.post('/:id/clarify', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
-    const payload = req.body as { target?: string };
-    const hookPayload = await task.clarify(req.params.id, payload.target, { database: query.database, namespace: query.namespace });
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
+    const payload = req.body as TaskAPIConfig;
+    const hookPayload = await task.clarify(req.params.id, payload.target, { database: query.database, namespace: query.namespace, context: payload.context });
     res.json(hookPayload);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -99,9 +100,9 @@ router.post('/:id/clarify', async (req, res) => {
 router.post('/:id/execute', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
-    const payload = req.body as { target?: string, model?: string };
-    res.json(await task.execute(req.params.id, payload.target, { database: query.database, namespace: query.namespace, model: payload.model }));
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
+    const payload = req.body as TaskAPIConfig;
+    res.json(await task.execute(req.params.id, payload.target, { database: query.database, namespace: query.namespace, model: payload.model, context: payload.context }));
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -111,9 +112,9 @@ router.post('/:id/execute', async (req, res) => {
 router.post('/:id/expand', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task') as Task;
-    const payload = req.body as { target?: string };
-    res.json(await task.expand(req.params.id, payload.target, { database: query.database, namespace: query.namespace }));
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task') as Task;
+    const payload = req.body as TaskAPIConfig;
+    res.json(await task.expand(req.params.id, payload.target, { database: query.database, namespace: query.namespace, model: payload.model, context: payload.context }));
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -123,14 +124,16 @@ router.post('/:id/expand', async (req, res) => {
 router.get('/:id/export', async (req, res) => {
   try {
     const query = req.query as { database: string, namespace: string, format?: ExportFormat };
-    const task = findEntity(query.database, query.namespace, 'task') as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task') as Task;
     
-    const exportedData = await task.export(req.params.id, query.format, { database: query.database, namespace: query.namespace });
+    let exportedData = await task.export(req.params.id, 'markdown', { database: query.database, namespace: query.namespace });
 
     // Determine the response content type based on the 'format' query parameter
     switch (query.format) {
       case 'html':
         res.type('text/html');
+        const markup = await marked(exportedData);
+        exportedData = `<html><head><title>Task Tree</title>${styles}</head><body>${markup}</body></html>`;
         break;
       case 'markdown':
         res.type('text/plain');
@@ -150,7 +153,7 @@ router.get('/:id/export', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     res.status(200).send(await task.find([], 0, 100));
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -161,7 +164,7 @@ router.get('/', async (req, res) => {
 router.get('/:taskId', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     const { taskId } = req.params;
     res.status(200).send(await task.retrieve(taskId));
   } catch (err) {
@@ -173,7 +176,7 @@ router.get('/:taskId', async (req, res) => {
 router.delete('/:taskId', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     const { taskId } = req.params;
     await task.delete(taskId);
     res.json({ status: 'success' });
@@ -186,7 +189,7 @@ router.delete('/:taskId', async (req, res) => {
 router.post('/aggregate', async (req, res) => {
   try {
     const query = req.query as {database: string, namespace: string};
-    const task = findEntity(query.database, query.namespace, 'task')as Task;
+    const task = MeshOS.findEntity(query.database, query.namespace, 'task')as Task;
     res.json(await task.aggregate(req.body.filter, req.body.apply, req.body.rows, req.body.columns, req.body.reduce, req.body.sort, req.body.start, req.body.size));
   } catch (err) {
     res.status(500).send({ error: err.message });

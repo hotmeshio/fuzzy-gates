@@ -53,7 +53,6 @@ export const arrayToHash = (response: [number, ...Array<string | string[]>]): Re
   return results;
 };
 
-
 /**
  * Safely serialize order data for storage in Redis
  * @param obj

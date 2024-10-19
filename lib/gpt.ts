@@ -54,6 +54,7 @@ class GPTService {
       frequency_penalty: 0, // No penalty on word frequency to allow necessary repetition
       presence_penalty: 0.5, // Moderate presence penalty to introduce variety in topics
     });    
+    console.log('RESPONSE >', JSON.stringify(response, null, 2));
     const output = response.choices[0].message.content;
     try {
       const obj = output ? JSON.parse(output) : {};

@@ -1,10 +1,11 @@
 import { Router, Request, Response } from 'express';
+import { MeshOS } from '@hotmeshio/hotmesh';
 import { Types } from '@hotmeshio/hotmesh';
 
-import { findEntity, findSchemas, toJSON } from '../../hotmesh/manifest';
 import { GPT } from '../../lib/gpt';
 
 const router = Router();
+const { findEntity, findSchemas, toJSON } = MeshOS;
 
 /**
  * Fetch the dashboard manifest (used by the webapp to drive UI controls).

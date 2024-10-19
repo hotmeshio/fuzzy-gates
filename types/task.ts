@@ -10,6 +10,7 @@ export type TaskInput = {
   preceding?: string; // preceding step
   following?: string; // following step
   ancestors?: string[]; // all ancestors
+  siblings?: string[]; // all siblings
 };
 
 type ItemDetails = {
@@ -57,13 +58,8 @@ export type ClarifyResponse = {
   clarify: Clarification[];
 };
 
-type Execution = {
-  id: string;
-  result: string;
-};
-
 export type ExecutionResponse = {
-  output: Execution[];
+  output: string;
 };
 
 type Expansion = {
@@ -91,13 +87,42 @@ export type RawTask = {
   _result?: string;
 }
 
-export type TaskConfg = {
+export type TaskConfig = {
+  origin?: string, //top-level task guid (task-Hxxx)
   namespace: string,
-  taskQueue: string,
-  entity: string,
+  taskQueue?: string,
+  entity?: string,
   database?: string,
+  context?: string,
   model?: string, //ai model
 };
+
+export type WorkflowInput = {
+  /**
+   * The target task entity to target when present (otherwise origin task is used)
+   */
+  id?: string | null | undefined;
+  /**
+   * The are the args for the main entry workflow
+   */
+  args?: TaskInput;
+  /**
+   * General config like namespace, database, since a multi-server/multi-app architecture
+   */
+  config: TaskConfig;
+}
+
+/**
+ * HTTP endpoints to create and update tasks
+ * expects optional configuration in the payload
+ * body to override defaults (like setting model
+ * and context).
+ */
+export type TaskAPIConfig = {
+  target?: string,
+  model?: string,   //gpt-4o
+  context?: string  //You are an expert in this field...
+}
 
 export type TaskExport = {
   $: string;
