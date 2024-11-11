@@ -24,7 +24,7 @@ import { TaskInput, ExportFormat, TaskConfig } from '../../types/task';
  * used to connect `workers` and `hooks`.
  * 
  * The standard `create` method is subclased and overidden
- * to trigger the `generateTaskTree` workflow, turning the
+ * to trigger the `generateTaskTree` workflow, overriding the
  * original 'create' event into a multi-step transaction that both saves
  * record data and transactionally guarantees all subordinated workflows
  * that are spawned will complete as well.

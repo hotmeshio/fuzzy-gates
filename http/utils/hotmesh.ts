@@ -1,3 +1,4 @@
+import * as Redis from 'redis';
 import { MeshOS } from '@hotmeshio/hotmesh';
 import { Types } from '@hotmeshio/hotmesh';
 
@@ -10,13 +11,11 @@ export const configureHotMesh = () => {
     name: 'Redis',
     label: 'redis/redis-stack7.2.0',
     search: true,
-    config: {
-      REDIS_DATABASE: 0,
-      REDIS_HOST: 'redis',
-      REDIS_PORT: 6379,
-      REDIS_USERNAME: '',
-      REDIS_PASSWORD: 'key_admin',
-      REDIS_USE_TLS: false,
+    connection: {
+      class: Redis,
+      options: {
+        url: 'redis://:key_admin@redis:6379',
+      }
     }
   });
 
